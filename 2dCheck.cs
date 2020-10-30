@@ -39,3 +39,47 @@ public static int[] To1DArray(int[,] input)
                 }
             }
         }
+
+        public static void GenLocal(string way)
+        {
+            var directions = new Dictionary<char, (int, int)>
+            {
+                { 'N', ( -1,  0) },
+                { 'S', ( 1, 0) },
+                { 'E', ( 0,  1) },
+                { 'W', (0,  -1) }
+            };
+            
+
+            var pos = (0, 0);
+            var max_row = 0;
+            var min_row = 0;
+            var max_col = 0;
+            var min_col = 0;
+            foreach (var iw in way)
+            {
+                var row = pos.Item1 + directions[iw].Item1;
+                if (row > max_row) max_row = row;
+                if (row < min_row) min_row = row;
+                var col = pos.Item2 + directions[iw].Item2;
+                if (col > max_col) max_col = col;
+                if (col < min_col) min_col = col;
+                pos = (row, col);
+            }
+          
+            var rows = max_row - min_row + 1;
+            var cols = max_col - min_col + 1;        
+            var start = (rows - max_row - 1, cols - max_col - 1);          
+            int[,] local_gen = new int[rows, cols];
+            Random rnd = new Random();
+            int i = start.Item1, j = start.Item2;
+            local_gen[i, j] = 1;
+            foreach (var el in way)
+            {
+                i += directions[el].Item1;
+                j += directions[el].Item2;
+                local_gen[i, j] = 1;
+
+            }
+            To1DArray(local_gen);
+        }
